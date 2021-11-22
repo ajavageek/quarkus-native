@@ -1,17 +1,16 @@
 package ch.frankel.blog
 
-import io.quarkus.vertx.web.Route
-import io.smallrye.mutiny.Uni
-import io.vertx.core.http.HttpServerRequest
-import io.vertx.ext.web.RoutingContext
+import io.vertx.core.json.Json
 import io.vertx.ext.web.client.WebClientOptions
 import io.vertx.mutiny.core.Vertx
 import io.vertx.mutiny.core.buffer.Buffer
+import io.vertx.mutiny.core.http.HttpServerRequest
+import io.vertx.mutiny.ext.web.Router
 import io.vertx.mutiny.ext.web.client.HttpRequest
 import io.vertx.mutiny.ext.web.client.WebClient
 import java.math.BigInteger
 import java.security.MessageDigest
-import javax.inject.Inject
+import javax.enterprise.event.Observes
 import javax.inject.Singleton
 
 class MarvelFactory {
@@ -30,20 +29,24 @@ class MarvelFactory {
 }
 
 @Singleton
-class MarvelRoutes @Inject constructor(
-    private val client: WebClient,
-    private val props: MarvelProperties,
-    private val digest: MessageDigest
-) {
+class MarvelRoutes {
 
-    @Route(path = "/")
-    fun characters(rc: RoutingContext): Uni<Model> = client
-        .get("/v1/public/characters")
-        .queryParamsWith(props, digest)
-        .queryParamsWith(rc.request())
-        .send()
-        .onItem()
-        .transform { it.bodyAsJson(Model::class.java) }
+    fun characters(@Observes router: Router, client: WebClient, props: MarvelProperties, digest: MessageDigest) {
+        router.get("/").handler { rc ->
+            client.get("/v1/public/characters")
+                .queryParamsWith(props, digest)
+                .queryParamsWith(rc.request())
+                .send()
+                .onItem()
+                .transform { it.bodyAsJson(Model::class.java) }
+                .subscribe()
+                .with {
+                    rc.response()
+                        .putHeader("Content-Type", "application/json")
+                        .endAndForget(Json.encode(it))
+                }
+        }
+    }
 }
 
 private fun HttpRequest<Buffer>.queryParamsWith(request: HttpServerRequest) =
