@@ -1,58 +1,101 @@
 package ch.frankel.blog
 
+import com.fasterxml.jackson.annotation.JsonProperty
+import io.quarkus.runtime.annotations.RegisterForReflection
 import java.net.URI
 
+@RegisterForReflection
 data class Model(
-    val code: Int,
-    val status: String,
-    val copyright: String,
-    val attributionText: String,
-    val attributionHTML: String,
-    val etag: String,
-    val data: Data
+    @field:JsonProperty("code")
+    var code: Int? = null,
+    @field:JsonProperty("status")
+    var status: String? = null,
+    @field:JsonProperty("copyright")
+    var copyright: String? = null,
+    @field:JsonProperty("attributionText")
+    var attributionText: String? = null,
+    @field:JsonProperty("attributionHTML")
+    var attributionHTML: String? = null,
+    @field:JsonProperty("etag")
+    var etag: String? = null,
+    @field:JsonProperty("data")
+    var data: Data? = null
 )
 
+@RegisterForReflection
 data class Data(
-    val offset: Int,
-    val limit: Int,
-    val total: Int,
-    val count: Int,
-    val results: List<Result>
+    @field:JsonProperty("offset")
+    var offset: Int? = null,
+    @field:JsonProperty("limit")
+    var limit: Int? = null,
+    @field:JsonProperty("total")
+    var total: Int? = null,
+    @field:JsonProperty("count")
+    var count: Int? = null,
+    @field:JsonProperty("results")
+    var results: List<Result> = mutableListOf()
 )
 
+@RegisterForReflection
 data class Result(
-    val id: Int,
-    val name: String,
-    val description: String,
-    val modified: String,
-    val thumbnail: Thumbnail?,
-    val resourceURI: URI,
-    val comics: Collection,
-    val series: Collection,
-    val stories: Collection,
-    val events: Collection,
-    val urls: List<Url>
+    @field:JsonProperty("id")
+    var id: Int? = null,
+    @field:JsonProperty("name")
+    var name: String? = null,
+    @field:JsonProperty("description")
+    var description: String? = null,
+    @field:JsonProperty("modified")
+    var modified: String? = null,
+    @field:JsonProperty("thumbnail")
+    var thumbnail: Thumbnail? = null,
+    @field:JsonProperty("resourceURI")
+    var resourceURI: URI? = null,
+    @field:JsonProperty("comics")
+    var comics: Collection? = null,
+    @field:JsonProperty("series")
+    var series: Collection? = null,
+    @field:JsonProperty("stories")
+    var stories: Collection? = null,
+    @field:JsonProperty("events")
+    var events: Collection? = null,
+    @field:JsonProperty("urls")
+    var urls: List<Url> = mutableListOf()
 )
 
+@RegisterForReflection
 data class Thumbnail(
-    val path: String,
-    val extension: String
+    @field:JsonProperty("path")
+    var path: String? = null,
+    @field:JsonProperty("extension")
+    var extension: String? = null
 )
 
+@RegisterForReflection
 data class Collection(
-    val available: Int,
-    val collectionURI: URI,
-    val items: List<Resource>,
-    val returned: Int
+    @field:JsonProperty("available")
+    var available: Int? = null,
+    @field:JsonProperty("collectionURI")
+    var collectionURI: URI? = null,
+    @field:JsonProperty("items")
+    var items: List<Resource> = mutableListOf(),
+    @field:JsonProperty("returned")
+    var returned: Int? = null
 )
 
+@RegisterForReflection
 data class Resource(
-    val resourceURI: URI,
-    val name: String,
-    val type: String?
+    @field:JsonProperty("resourceURI")
+    var resourceURI: URI? = null,
+    @field:JsonProperty("name")
+    var name: String? = null,
+    @field:JsonProperty("type")
+    var type: String? = null
 )
 
+@RegisterForReflection
 data class Url(
-    val type: String,
-    val url: URI
+    @field:JsonProperty("type")
+    var type: String? = null,
+    @field:JsonProperty("url")
+    var url: URI? = null
 )

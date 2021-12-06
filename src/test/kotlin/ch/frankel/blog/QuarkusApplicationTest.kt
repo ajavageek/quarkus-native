@@ -25,7 +25,7 @@ class QuarkusApplicationTest {
             .`as`(Model::class.java)
         assertNotNull(model)
         assertNotNull(model.data)
-        assertEquals(1, model.data.count)
-        assertEquals("Anita Blake", model.data.results.first().name)
+        assertEquals(1, model.data?.count)
+        assertEquals("Anita Blake", model.data?.results?.first()?.name)
     }
 }
